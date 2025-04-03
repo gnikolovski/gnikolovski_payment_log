@@ -1,0 +1,4 @@
+view payment logs:
+  title: 'View payment logs'
+  description: 'Allow users to view payment gateway request and response logs.'
+  restrict access: TRUE

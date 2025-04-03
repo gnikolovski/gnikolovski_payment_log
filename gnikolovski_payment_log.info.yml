@@ -1,0 +1,5 @@
+name: Payment Log
+type: module
+description: 'Logs payment-related activities.'
+package: Commerce (contrib)
+core_version_requirement: ^10 || ^11

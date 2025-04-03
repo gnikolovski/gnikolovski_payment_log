@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function gnikolovski_payment_log_schema(): array {
+  $schema['gnikolovski_payment_log'] = [
+    'description' => 'Stores payment gateway request and response logs.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique payment log ID.',
+      ],
+      'order_id' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The order ID for which payment was processed.',
+      ],
+      'gateway_name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The name of the payment gateway used for processing.',
+      ],
+      'request_time' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The Unix timestamp when the request was sent to payment gateway.',
+      ],
+      'request_data' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => 'JSON data sent to payment gateway.',
+      ],
+      'response_time' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The Unix timestamp when the response was received from payment gateway.',
+      ],
+      'response_data' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => 'JSON data received from payment gateway.',
+      ],
+      'canceled' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Indicates whether the payment was canceled.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'order_id' => ['order_id'],
+      'request_time' => ['request_time'],
+      'response_time' => ['response_time'],
+    ],
+  ];
+
+  return $schema;
+}
