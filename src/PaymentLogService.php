@@ -36,11 +36,12 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function logRequest(string $order_id, string $gateway_name, array|string $request_data): int {
+  public function logRequest(string $order_id, string $session_id, string $gateway_name, array|string $request_data): int {
     try {
       $id = $this->database->insert('gnikolovski_payment_log')
         ->fields([
           'order_id' => $order_id,
+          'session_id' => $session_id,
           'gateway_name' => $gateway_name,
           'request_time' => $this->time->getRequestTime(),
           'request_data' => is_string($request_data) ? $request_data : json_encode($request_data),
@@ -121,13 +122,13 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   public function getPendingOrderIds(int $time_threshold = 1200, int $max_attempts = 5): array {
     try {
       return $this->database->select('gnikolovski_payment_log', 'pl')
-        ->fields('pl', ['order_id'])
+        ->fields('pl', ['order_id', 'session_id'])
         ->condition('request_time', $this->time->getRequestTime() - $time_threshold, '<')
         ->condition('response_time', NULL, 'IS NULL')
         ->condition('canceled', 0)
         ->condition('attempt_count', $max_attempts, '<')
         ->execute()
-        ->fetchCol();
+        ->fetchAll();
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(

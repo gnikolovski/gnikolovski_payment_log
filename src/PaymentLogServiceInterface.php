@@ -14,6 +14,8 @@ interface PaymentLogServiceInterface {
    *
    * @param string $order_id
    *   The order ID.
+   * @param string $session_id
+   *   The session ID.
    * @param string $gateway_name
    *   The name of the payment gateway.
    * @param array|string $request_data
@@ -22,7 +24,7 @@ interface PaymentLogServiceInterface {
    * @return int
    *   The log entry ID or 0 if the operation failed.
    */
-  public function logRequest(string $order_id, string $gateway_name, array|string $request_data): int;
+  public function logRequest(string $order_id, string $session_id, string $gateway_name, array|string $request_data): int;
 
   /**
    * Logs a payment gateway response.

@@ -56,6 +56,22 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'string',
       ],
     ],
+    'session_id' => [
+      'title' => t('Session ID'),
+      'help' => t('The session ID for which payment was processed.'),
+      'field' => [
+        'id' => 'standard',
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
+      ],
+      'argument' => [
+        'id' => 'string',
+      ],
+    ],
     'gateway_name' => [
       'title' => t('Gateway Name'),
       'help' => t('The name of the payment gateway used for processing.'),
