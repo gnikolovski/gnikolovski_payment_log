@@ -68,6 +68,7 @@ final class PaymentLogService implements PaymentLogServiceInterface {
           'response_data' => is_string($response_data) ? $response_data : json_encode($response_data),
         ])
         ->condition('order_id', $order_id)
+        ->condition('response_time', NULL, 'IS NULL')
         ->condition('canceled', 0)
         ->execute();
 
@@ -86,7 +87,9 @@ final class PaymentLogService implements PaymentLogServiceInterface {
    */
   public function logCanceled(string $order_id): bool {
     return $this->database->update('gnikolovski_payment_log')
-      ->fields(['canceled' => 1])
+      ->fields([
+        'canceled' => 1,
+      ])
       ->condition('order_id', $order_id)
       ->condition('response_time', NULL, 'IS NULL')
       ->condition('canceled', 0)
@@ -96,13 +99,33 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPendingOrderIds(int $time_threshold = 1200): array {
+  public function logAttempt(string $order_id): bool {
+    $query = 'SELECT attempt_count FROM {gnikolovski_payment_log} WHERE order_id = :order_id AND response_time IS NULL AND canceled = 0';
+    $attempt_count = $this->database->query($query, [
+      'order_id' => $order_id,
+    ])->fetchField();
+
+    return $this->database->update('gnikolovski_payment_log')
+      ->fields([
+        'attempt_count' => (int) $attempt_count + 1,
+      ])
+      ->condition('order_id', $order_id)
+      ->condition('response_time', NULL, 'IS NULL')
+      ->condition('canceled', 0)
+      ->execute() > 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPendingOrderIds(int $time_threshold = 1200, int $max_attempts = 5): array {
     try {
       return $this->database->select('gnikolovski_payment_log', 'pl')
         ->fields('pl', ['order_id'])
         ->condition('request_time', $this->time->getRequestTime() - $time_threshold, '<')
         ->condition('response_time', NULL, 'IS NULL')
         ->condition('canceled', 0)
+        ->condition('attempt_count', $max_attempts, '<')
         ->execute()
         ->fetchCol();
     }

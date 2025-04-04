@@ -49,15 +49,28 @@ interface PaymentLogServiceInterface {
   public function logCanceled(string $order_id): bool;
 
   /**
+   * Logs an attempt to get the payment status.
+   *
+   * @param string $order_id
+   *   The order ID to update.
+   *
+   * @return bool
+   *   TRUE if the update was successful, FALSE otherwise.
+   */
+  public function logAttempt(string $order_id): bool;
+
+  /**
    * Get order IDs that have pending payment responses.
    *
    * @param int $time_threshold
    *   The time threshold in seconds. Orders without a response for longer than
    *   this duration will be considered pending.
+   * @param int $max_attempts
+   *   The maximum number of attempts to get the payment status.
    *
    * @return array
    *   The order IDs with pending payment responses.
    */
-  public function getPendingOrderIds(int $time_threshold = 1200): array;
+  public function getPendingOrderIds(int $time_threshold = 1200, int $max_attempts = 5): array;
 
 }

@@ -91,6 +91,13 @@ function gnikolovski_payment_log_schema(): array {
         'default' => 0,
         'description' => 'Indicates whether the payment was canceled.',
       ],
+      'attempt_count' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'The number of attempts made to get the payment status.',
+      ],
     ],
     'primary key' => ['id'],
     'indexes' => [
@@ -101,4 +108,21 @@ function gnikolovski_payment_log_schema(): array {
   ];
 
   return $schema;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11001(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('gnikolovski_payment_log', 'attempt_count')) {
+    $spec = [
+      'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'The number of attempts made to get the payment status.',
+    ];
+    $schema->addField('gnikolovski_payment_log', 'attempt_count', $spec);
+  }
 }

@@ -118,6 +118,19 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'boolean',
       ],
     ],
+    'attempt_count' => [
+      'title' => t('Attempt Count'),
+      'help' => t('The number of attempts made to get the payment status.'),
+      'field' => [
+        'id' => 'numeric',
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'numeric',
+      ],
+    ],
   ];
 
   return $data;
