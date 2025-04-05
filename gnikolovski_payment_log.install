@@ -133,7 +133,6 @@ function gnikolovski_payment_log_update_11001(): void {
   }
 }
 
-
 /**
  * Implements hook_update_N().
  */
