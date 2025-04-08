@@ -36,15 +36,24 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function logRequest(string $order_id, string $session_id, string $gateway_name, array|string $request_data): int {
+  public function logRequest(
+    string $email,
+    string $order_id,
+    string $remote_order_id,
+    string $remote_session_id,
+    string $gateway_name,
+    string $request_data,
+  ): int {
     try {
       $id = $this->database->insert('gnikolovski_payment_log')
         ->fields([
+          'email' => $email,
           'order_id' => $order_id,
-          'session_id' => $session_id,
+          'remote_order_id' => $remote_order_id,
+          'remote_session_id' => $remote_session_id,
           'gateway_name' => $gateway_name,
           'request_time' => $this->time->getRequestTime(),
-          'request_data' => is_string($request_data) ? $request_data : json_encode($request_data),
+          'request_data' => $request_data,
         ])
         ->execute();
 
@@ -61,12 +70,15 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function logResponse(string $order_id, array|string $response_data): bool {
+  public function logResponse(
+    string $order_id,
+    string $response_data,
+  ): bool {
     try {
       $updated = $this->database->update('gnikolovski_payment_log')
         ->fields([
           'response_time' => $this->time->getRequestTime(),
-          'response_data' => is_string($response_data) ? $response_data : json_encode($response_data),
+          'response_data' => $response_data,
         ])
         ->condition('order_id', $order_id)
         ->condition('response_time', NULL, 'IS NULL')
@@ -122,7 +134,7 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   public function getPendingOrderIds(int $time_threshold = 1200, int $max_attempts = 5): array {
     try {
       return $this->database->select('gnikolovski_payment_log', 'pl')
-        ->fields('pl', ['order_id', 'session_id'])
+        ->fields('pl', ['order_id', 'remote_order_id', 'remote_session_id'])
         ->condition('request_time', $this->time->getRequestTime() - $time_threshold, '<')
         ->condition('response_time', NULL, 'IS NULL')
         ->condition('canceled', 0)

@@ -12,32 +12,46 @@ interface PaymentLogServiceInterface {
   /**
    * Logs a payment gateway request.
    *
+   * @param string $email
+   *   The email address of the user who made the payment.
    * @param string $order_id
    *   The order ID.
-   * @param string $session_id
-   *   The session ID.
+   * @param string $remote_order_id
+   *   The remote order ID.
+   * @param string $remote_session_id
+   *   The remote session ID.
    * @param string $gateway_name
    *   The name of the payment gateway.
-   * @param array|string $request_data
+   * @param string $request_data
    *   Request data sent to payment gateway.
    *
    * @return int
    *   The log entry ID or 0 if the operation failed.
    */
-  public function logRequest(string $order_id, string $session_id, string $gateway_name, array|string $request_data): int;
+  public function logRequest(
+    string $email,
+    string $order_id,
+    string $remote_order_id,
+    string $remote_session_id,
+    string $gateway_name,
+    string $request_data,
+  ): int;
 
   /**
    * Logs a payment gateway response.
    *
    * @param string $order_id
    *   The order ID to update.
-   * @param array|string $response_data
+   * @param string $response_data
    *   Response data received from payment gateway.
    *
    * @return bool
    *   TRUE if the update was successful, FALSE otherwise.
    */
-  public function logResponse(string $order_id, array|string $response_data): bool;
+  public function logResponse(
+    string $order_id,
+    string $response_data,
+  ): bool;
 
   /**
    * Logs a payment as canceled.
@@ -73,6 +87,9 @@ interface PaymentLogServiceInterface {
    * @return array
    *   The order IDs with pending payment responses.
    */
-  public function getPendingOrderIds(int $time_threshold = 1200, int $max_attempts = 5): array;
+  public function getPendingOrderIds(
+    int $time_threshold = 1200,
+    int $max_attempts = 5,
+  ): array;
 
 }

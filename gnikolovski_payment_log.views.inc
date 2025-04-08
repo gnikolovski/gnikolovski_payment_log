@@ -40,6 +40,22 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'numeric',
       ],
     ],
+    'email' => [
+      'title' => t('Email'),
+      'help' => t('The email address of the user who made the payment.'),
+      'field' => [
+        'id' => 'standard',
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
+      ],
+      'argument' => [
+        'id' => 'string',
+      ],
+    ],
     'order_id' => [
       'title' => t('Order ID'),
       'help' => t('The order ID for which payment was processed.'),
@@ -56,9 +72,25 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'string',
       ],
     ],
-    'session_id' => [
-      'title' => t('Session ID'),
-      'help' => t('The session ID for which payment was processed.'),
+    'remote_order_id' => [
+      'title' => t('Remote Order ID'),
+      'help' => t('The remote order ID for which payment was processed.'),
+      'field' => [
+        'id' => 'standard',
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
+      ],
+      'argument' => [
+        'id' => 'string',
+      ],
+    ],
+    'remote_session_id' => [
+      'title' => t('Remote Session ID'),
+      'help' => t('The remote session ID for which payment was processed.'),
       'field' => [
         'id' => 'standard',
       ],

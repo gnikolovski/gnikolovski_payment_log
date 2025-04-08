@@ -48,17 +48,29 @@ function gnikolovski_payment_log_schema(): array {
         'not null' => TRUE,
         'description' => 'Primary Key: Unique payment log ID.',
       ],
+      'email' => [
+        'type' => 'varchar',
+        'length' => 1024,
+        'not null' => FALSE,
+        'description' => 'The email address of the user who made the payment.',
+      ],
       'order_id' => [
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
         'description' => 'The order ID for which payment was processed.',
       ],
-      'session_id' => [
+      'remote_order_id' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The remote order ID for which payment was processed.',
+      ],
+      'remote_session_id' => [
         'type' => 'varchar',
         'length' => 1024,
         'not null' => FALSE,
-        'description' => 'The session ID for which payment was processed.',
+        'description' => 'The remote session ID for which payment was processed.',
       ],
       'gateway_name' => [
         'type' => 'varchar',
@@ -110,6 +122,8 @@ function gnikolovski_payment_log_schema(): array {
       'order_id' => ['order_id'],
       'request_time' => ['request_time'],
       'response_time' => ['response_time'],
+      'canceled' => ['canceled'],
+      'attempt_count' => ['attempt_count'],
     ],
   ];
 
@@ -146,5 +160,105 @@ function gnikolovski_payment_log_update_11002(): void {
       'description' => 'The session ID for which payment was processed.',
     ];
     $schema->addField('gnikolovski_payment_log', 'session_id', $spec);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11003(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('gnikolovski_payment_log', 'email')) {
+    $spec = [
+      'type' => 'varchar',
+      'length' => 1024,
+      'not null' => FALSE,
+      'description' => 'The email address of the user who made the payment.',
+    ];
+    $schema->addField('gnikolovski_payment_log', 'email', $spec);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11004(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('gnikolovski_payment_log', 'remote_order_id')) {
+    $spec = [
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+      'description' => 'The remote order ID for which payment was processed.',
+    ];
+    $schema->addField('gnikolovski_payment_log', 'remote_order_id', $spec);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11005(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('gnikolovski_payment_log', 'remote_session_id')) {
+    $spec = [
+      'type' => 'varchar',
+      'length' => 1024,
+      'not null' => FALSE,
+      'description' => 'The remote session ID for which payment was processed.',
+    ];
+    $schema->addField('gnikolovski_payment_log', 'remote_session_id', $spec);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11006(): void {
+  $schema = Database::getConnection()->schema();
+  if ($schema->fieldExists('gnikolovski_payment_log', 'session_id')) {
+    $schema->dropField('gnikolovski_payment_log', 'session_id');
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11007(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->indexExists('gnikolovski_payment_log', 'canceled')) {
+    $spec = [
+      'fields' => [
+        'canceled' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Indicates whether the payment was canceled.',
+        ],
+      ],
+    ];
+    $schema->addIndex('gnikolovski_payment_log', 'canceled', ['canceled'], $spec);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11008(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->indexExists('gnikolovski_payment_log', 'attempt_count')) {
+    $spec = [
+      'fields' => [
+        'attempt_count' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+          'default' => 0,
+          'description' => 'The number of attempts made to get the payment status.',
+        ],
+      ],
+    ];
+    $schema->addIndex('gnikolovski_payment_log', 'attempt_count', ['attempt_count'], $spec);
   }
 }
