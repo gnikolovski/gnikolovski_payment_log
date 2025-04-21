@@ -34,24 +34,6 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   ) {}
 
   /**
-   * Gets a query with common conditions for pending payment logs.
-   *
-   * @param \Drupal\Core\Database\Query\UpdateInterface|\Drupal\Core\Database\Query\SelectInterface $query
-   *   The database query object.
-   * @param string $order_id
-   *   The order ID to filter by.
-   *
-   * @return \Drupal\Core\Database\Query\UpdateInterface|\Drupal\Core\Database\Query\SelectInterface
-   *   The query with conditions applied.
-   */
-  protected function addPendingConditions($query, string $order_id) {
-    return $query
-      ->condition('order_id', $order_id)
-      ->condition('response_time', NULL, 'IS NULL')
-      ->condition('canceled', 0);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function logRequest(
@@ -74,7 +56,7 @@ final class PaymentLogService implements PaymentLogServiceInterface {
           'request_data' => $request_data,
         ])
         ->execute();
-        return (int) $id;
+      return (int) $id;
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(
@@ -99,8 +81,11 @@ final class PaymentLogService implements PaymentLogServiceInterface {
         ->fields([
           'response_time' => $this->time->getRequestTime(),
           'response_data' => $response_data,
-        ]);
-      $updated = $this->addPendingConditions($updated, $order_id)->execute();
+        ])
+        ->condition('order_id', $order_id)
+        ->condition('response_time', NULL, 'IS NULL')
+        ->condition('canceled', 0)
+        ->execute();
       return $updated > 0;
     }
     catch (\Exception $e) {
@@ -122,8 +107,11 @@ final class PaymentLogService implements PaymentLogServiceInterface {
       $query = $this->database->update('gnikolovski_payment_log')
         ->fields([
           'canceled' => 1,
-        ]);
-      return $this->addPendingConditions($query, $order_id)->execute() > 0;
+        ])
+        ->condition('order_id', $order_id)
+        ->condition('response_time', NULL, 'IS NULL')
+        ->condition('canceled', 0);
+      return $query->execute() > 0;
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(
@@ -149,8 +137,11 @@ final class PaymentLogService implements PaymentLogServiceInterface {
       $update = $this->database->update('gnikolovski_payment_log')
         ->fields([
           'attempt_count' => (int) $attempt_count + 1,
-        ]);
-      return $this->addPendingConditions($update, $order_id)->execute() > 0;
+        ])
+        ->condition('order_id', $order_id)
+        ->condition('response_time', NULL, 'IS NULL')
+        ->condition('canceled', 0);
+      return $update->execute() > 0;
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(
