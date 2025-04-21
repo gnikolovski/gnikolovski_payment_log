@@ -118,27 +118,49 @@ final class PaymentLogService implements PaymentLogServiceInterface {
    * {@inheritdoc}
    */
   public function logCanceled(string $order_id): bool {
-    $query = $this->database->update('gnikolovski_payment_log')
-      ->fields([
-        'canceled' => 1,
-      ]);
-    return $this->addPendingConditions($query, $order_id)->execute() > 0;
+    try {
+      $query = $this->database->update('gnikolovski_payment_log')
+        ->fields([
+          'canceled' => 1,
+        ]);
+      return $this->addPendingConditions($query, $order_id)->execute() > 0;
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->get('gnikolovski_payment_log')->error(
+        'Failed to log canceled status for order ID: @order_id. Message: @message', [
+          '@order_id' => $order_id,
+          '@message' => $e->getMessage(),
+        ],
+      );
+      return FALSE;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function logAttempt(string $order_id): bool {
-    $query = 'SELECT attempt_count FROM {gnikolovski_payment_log} WHERE order_id = :order_id AND response_time IS NULL AND canceled = 0';
-    $attempt_count = $this->database->query($query, [
-      'order_id' => $order_id,
-    ])->fetchField();
+    try {
+      $query = 'SELECT attempt_count FROM {gnikolovski_payment_log} WHERE order_id = :order_id AND response_time IS NULL AND canceled = 0';
+      $attempt_count = $this->database->query($query, [
+        'order_id' => $order_id,
+      ])->fetchField();
 
-    $update = $this->database->update('gnikolovski_payment_log')
-      ->fields([
-        'attempt_count' => (int) $attempt_count + 1,
-      ]);
-    return $this->addPendingConditions($update, $order_id)->execute() > 0;
+      $update = $this->database->update('gnikolovski_payment_log')
+        ->fields([
+          'attempt_count' => (int) $attempt_count + 1,
+        ]);
+      return $this->addPendingConditions($update, $order_id)->execute() > 0;
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->get('gnikolovski_payment_log')->error(
+        'Failed to log attempt for order ID: @order_id. Message: @message', [
+          '@order_id' => $order_id,
+          '@message' => $e->getMessage(),
+        ],
+      );
+      return FALSE;
+    }
   }
 
   /**
