@@ -61,7 +61,10 @@ final class PaymentLogService implements PaymentLogServiceInterface {
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(
-        'Failed to log payment request: @message', ['@message' => $e->getMessage()]
+        'Failed to log payment request for order ID: @order_id. Message: @message', [
+          '@order_id' => $order_id,
+          '@message' => $e->getMessage(),
+        ],
       );
       return 0;
     }
@@ -89,7 +92,10 @@ final class PaymentLogService implements PaymentLogServiceInterface {
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(
-        'Failed to log payment response: @message', ['@message' => $e->getMessage()]
+        'Failed to log payment response for order ID: @order_id. Message: @message', [
+          '@order_id' => $order_id,
+          '@message' => $e->getMessage(),
+        ],
       );
       return FALSE;
     }
@@ -144,7 +150,9 @@ final class PaymentLogService implements PaymentLogServiceInterface {
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('gnikolovski_payment_log')->error(
-        'Failed to get pending order IDs: @message', ['@message' => $e->getMessage()]
+        'Failed to get pending order IDs. Message: @message', [
+          '@message' => $e->getMessage(),
+        ],
       );
       return [];
     }
