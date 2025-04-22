@@ -39,8 +39,7 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   public function logRequest(
     string $email,
     string $order_id,
-    string $remote_order_id,
-    string $remote_session_id,
+    array $additional_data,
     string $gateway_name,
     string $request_data,
   ): int {
@@ -49,8 +48,7 @@ final class PaymentLogService implements PaymentLogServiceInterface {
         ->fields([
           'email' => $email,
           'order_id' => $order_id,
-          'remote_order_id' => $remote_order_id,
-          'remote_session_id' => $remote_session_id,
+          'additional_data' => json_encode($additional_data),
           'gateway_name' => $gateway_name,
           'request_time' => $this->time->getRequestTime(),
           'request_data' => $request_data,
@@ -160,7 +158,7 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   public function getPendingOrderIds(int $time_threshold = 1200, int $max_attempts = 5): array {
     try {
       return $this->database->select('gnikolovski_payment_log', 'pl')
-        ->fields('pl', ['order_id', 'remote_order_id', 'remote_session_id'])
+        ->fields('pl', ['order_id', 'additional_data'])
         ->condition('request_time', $this->time->getRequestTime() - $time_threshold, '<')
         ->condition('response_time', NULL, 'IS NULL')
         ->condition('canceled', 0)

@@ -16,10 +16,8 @@ interface PaymentLogServiceInterface {
    *   The email address of the user who made the payment.
    * @param string $order_id
    *   The order ID.
-   * @param string $remote_order_id
-   *   The remote order ID.
-   * @param string $remote_session_id
-   *   The remote session ID.
+   * @param array $additional_data
+   *   Additional data for the payment.
    * @param string $gateway_name
    *   The name of the payment gateway.
    * @param string $request_data
@@ -31,8 +29,7 @@ interface PaymentLogServiceInterface {
   public function logRequest(
     string $email,
     string $order_id,
-    string $remote_order_id,
-    string $remote_session_id,
+    array $additional_data,
     string $gateway_name,
     string $request_data,
   ): int;

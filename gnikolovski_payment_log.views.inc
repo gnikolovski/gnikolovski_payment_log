@@ -72,35 +72,17 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'string',
       ],
     ],
-    'remote_order_id' => [
-      'title' => t('Remote Order ID'),
-      'help' => t('The remote order ID for which payment was processed.'),
+    'additional_data' => [
+      'title' => t('Additional Data'),
+      'help' => t('Additional json data for the payment.'),
       'field' => [
         'id' => 'standard',
+        'click sortable' => FALSE,
       ],
       'sort' => [
         'id' => 'standard',
       ],
       'filter' => [
-        'id' => 'string',
-      ],
-      'argument' => [
-        'id' => 'string',
-      ],
-    ],
-    'remote_session_id' => [
-      'title' => t('Remote Session ID'),
-      'help' => t('The remote session ID for which payment was processed.'),
-      'field' => [
-        'id' => 'standard',
-      ],
-      'sort' => [
-        'id' => 'standard',
-      ],
-      'filter' => [
-        'id' => 'string',
-      ],
-      'argument' => [
         'id' => 'string',
       ],
     ],
@@ -137,6 +119,12 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'standard',
         'click sortable' => FALSE,
       ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
+      ],
     ],
     'response_time' => [
       'title' => t('Response Time'),
@@ -157,6 +145,12 @@ function gnikolovski_payment_log_views_data(): array {
       'field' => [
         'id' => 'standard',
         'click sortable' => FALSE,
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
       ],
     ],
     'canceled' => [
