@@ -15,7 +15,7 @@ use Drupal\Core\Database\Database;
 function gnikolovski_payment_log_requirements($phase): array {
   $requirements = [];
 
-  if ($phase == 'runtime') {
+  if ($phase == 'runtime' && PHP_SAPI !== 'cli') {
     if (ini_get('session.cookie_samesite') === 'None') {
       $requirements['gnikolovski_payment_log_cookie_samesite'] = [
         'title' => t('Cookie samesite attribute'),
