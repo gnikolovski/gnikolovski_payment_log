@@ -26,7 +26,7 @@ function gnikolovski_payment_log_requirements($phase): array {
     else {
       $requirements['gnikolovski_payment_log_cookie_samesite'] = [
         'title' => t('Cookie samesite attribute'),
-        'description' => t('The "cookie_samesite" attribute must be set to "None" for the payment redirection to work properly. Please update your "services.yml" file.'),
+        'description' => t('The "cookie_samesite" attribute must be set to "None" for the payment redirection to work properly. Please update your "services.yml" file. If you do not have HTTPS enabled for this environment, please ignore this warning.'),
         'severity' => REQUIREMENT_ERROR,
       ];
     }
