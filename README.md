@@ -11,7 +11,7 @@ REQUIREMENTS
 
 This module requires the following:
 
-* Drupal 10, or 11
+* Drupal 9, 10, or 11
 * PHP 8.1 or higher
 
 INSTALLATION

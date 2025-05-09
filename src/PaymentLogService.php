@@ -7,7 +7,6 @@ namespace Drupal\gnikolovski_payment_log;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Service for logging payment gateway requests and responses.
@@ -25,12 +24,9 @@ final class PaymentLogService implements PaymentLogServiceInterface {
    *   The time service.
    */
   public function __construct(
-    #[Autowire(service: 'database')]
-    protected Connection $database,
-    #[Autowire(service: 'logger.factory')]
-    protected LoggerChannelFactoryInterface $loggerFactory,
-    #[Autowire(service: 'datetime.time')]
-    protected TimeInterface $time,
+    private readonly Connection $database,
+    private readonly LoggerChannelFactoryInterface $loggerFactory,
+    private readonly TimeInterface $time,
   ) {}
 
   /**

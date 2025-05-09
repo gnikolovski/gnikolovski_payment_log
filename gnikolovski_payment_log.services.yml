@@ -1,4 +1,7 @@
 services:
   gnikolovski_payment_log.service:
     class: Drupal\gnikolovski_payment_log\PaymentLogService
-    autowire: true
+    arguments:
+      - '@database'
+      - '@logger.factory'
+      - '@datetime.time'
