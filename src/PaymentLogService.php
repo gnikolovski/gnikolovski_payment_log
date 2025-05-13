@@ -121,6 +121,32 @@ final class PaymentLogService implements PaymentLogServiceInterface {
   /**
    * {@inheritdoc}
    */
+  public function logError(string $order_id, string $error_message): bool {
+    try {
+      $updated = $this->database->update('gnikolovski_payment_log')
+        ->fields([
+          'last_error' => $error_message,
+        ])
+        ->condition('order_id', $order_id)
+        ->condition('response_time', NULL, 'IS NULL')
+        ->condition('canceled', 0)
+        ->execute();
+      return $updated > 0;
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->get('gnikolovski_payment_log')->error(
+        'Failed to log error message for order ID: @order_id. Message: @message', [
+          '@order_id' => $order_id,
+          '@message' => $e->getMessage(),
+        ],
+      );
+      return FALSE;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function logAttempt(string $order_id): bool {
     try {
       $query = 'SELECT attempt_count FROM {gnikolovski_payment_log} WHERE order_id = :order_id AND response_time IS NULL AND canceled = 0';

@@ -84,6 +84,12 @@ function gnikolovski_payment_log_schema(): array {
         'default' => 0,
         'description' => 'The number of attempts made to get the payment status.',
       ],
+      'last_error' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => 'Last error message.',
+      ],
     ],
     'primary key' => ['id'],
     'indexes' => [
@@ -264,5 +270,21 @@ function gnikolovski_payment_log_update_11011(): void {
       'description' => 'Additional json data for the payment.',
     ];
     $schema->addField('gnikolovski_payment_log', 'additional_data', $spec);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function gnikolovski_payment_log_update_11012(): void {
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('gnikolovski_payment_log', 'last_error')) {
+    $spec = [
+      'type' => 'text',
+      'size' => 'big',
+      'not null' => FALSE,
+      'description' => 'Last error message.',
+    ];
+    $schema->addField('gnikolovski_payment_log', 'last_error', $spec);
   }
 }

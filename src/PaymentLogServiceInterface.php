@@ -62,6 +62,19 @@ interface PaymentLogServiceInterface {
   public function logCanceled(string $order_id): bool;
 
   /**
+   * Logs an error message.
+   *
+   * @param string $order_id
+   *   The order ID to update.
+   * @param string $error_message
+   *   The error message to log.
+   *
+   * @return bool
+   *   TRUE if the update was successful, FALSE otherwise.
+   */
+  public function logError(string $order_id, string $error_message): bool;
+
+  /**
    * Logs an attempt to get the payment status.
    *
    * @param string $order_id

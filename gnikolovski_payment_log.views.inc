@@ -173,6 +173,20 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'numeric',
       ],
     ],
+    'last_error' => [
+      'title' => t('Last Error'),
+      'help' => t('Last error message.'),
+      'field' => [
+        'id' => 'standard',
+        'click sortable' => FALSE,
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
+      ],
+    ],
   ];
 
   return $data;
