@@ -153,6 +153,20 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'string',
       ],
     ],
+    'last_error' => [
+      'title' => t('Last Error'),
+      'help' => t('Last error message.'),
+      'field' => [
+        'id' => 'standard',
+        'click sortable' => FALSE,
+      ],
+      'sort' => [
+        'id' => 'standard',
+      ],
+      'filter' => [
+        'id' => 'string',
+      ],
+    ],
     'canceled' => [
       'title' => t('Canceled'),
       'help' => t('Indicates whether the payment was canceled.'),
@@ -171,20 +185,6 @@ function gnikolovski_payment_log_views_data(): array {
       ],
       'filter' => [
         'id' => 'numeric',
-      ],
-    ],
-    'last_error' => [
-      'title' => t('Last Error'),
-      'help' => t('Last error message.'),
-      'field' => [
-        'id' => 'standard',
-        'click sortable' => FALSE,
-      ],
-      'sort' => [
-        'id' => 'standard',
-      ],
-      'filter' => [
-        'id' => 'string',
       ],
     ],
   ];

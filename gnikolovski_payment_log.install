@@ -70,6 +70,12 @@ function gnikolovski_payment_log_schema(): array {
         'not null' => FALSE,
         'description' => 'JSON data received from payment gateway.',
       ],
+      'last_error' => [
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => 'Last error message.',
+      ],
       'canceled' => [
         'type' => 'int',
         'size' => 'tiny',
@@ -83,12 +89,6 @@ function gnikolovski_payment_log_schema(): array {
         'not null' => FALSE,
         'default' => 0,
         'description' => 'The number of attempts made to get the payment status.',
-      ],
-      'last_error' => [
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => FALSE,
-        'description' => 'Last error message.',
       ],
     ],
     'primary key' => ['id'],
