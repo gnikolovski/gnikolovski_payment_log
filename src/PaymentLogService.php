@@ -11,7 +11,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 /**
  * Service for logging payment gateway requests and responses.
  */
-final class PaymentLogService implements PaymentLogServiceInterface {
+final readonly class PaymentLogService implements PaymentLogServiceInterface {
 
   /**
    * Constructs a new PaymentLogService object.
@@ -24,9 +24,9 @@ final class PaymentLogService implements PaymentLogServiceInterface {
    *   The time service.
    */
   public function __construct(
-    private readonly Connection $database,
-    private readonly LoggerChannelFactoryInterface $loggerFactory,
-    private readonly TimeInterface $time,
+    private Connection $database,
+    private LoggerChannelFactoryInterface $loggerFactory,
+    private TimeInterface $time,
   ) {}
 
   /**

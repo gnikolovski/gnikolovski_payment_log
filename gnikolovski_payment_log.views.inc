@@ -10,10 +10,8 @@ declare(strict_types=1);
 /**
  * Implements hook_views_data().
  */
-function gnikolovski_payment_log_views_data(): array {
-  $data = [];
-
-  $data['gnikolovski_payment_log'] = [
+function gnikolovski_payment_log_views_data() : array {
+  return ['gnikolovski_payment_log' => [
     'table' => [
       'group' => t('Payment Log'),
       'provider' => 'gnikolovski_payment_log',
@@ -187,7 +185,5 @@ function gnikolovski_payment_log_views_data(): array {
         'id' => 'numeric',
       ],
     ],
-  ];
-
-  return $data;
+  ]];
 }
