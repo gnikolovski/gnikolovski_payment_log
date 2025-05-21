@@ -19,6 +19,6 @@
     "minimum-stability": "dev",
     "require": {
         "drupal/core": "^9 || ^10 || ^11",
-        "php": ">=8.1"
+        "php": ">=8.0"
     }
 }
